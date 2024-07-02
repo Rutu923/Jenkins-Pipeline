@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage('Pull') {
             steps {
-                git 'https://github.com/Rutu923/studentapp-ui.git'
+                 git 'https://github.com/Shantanu20000/studentapp-ui-jenkin-mvn.git'
                 echo 'Pull Successfully'
             }
         }
