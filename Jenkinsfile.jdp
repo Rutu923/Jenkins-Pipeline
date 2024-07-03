@@ -12,6 +12,10 @@ pipeline {
         }
         stage('Build') {
             steps {
+                echo '$PWD'
+                sh 'mvn clean'
+                sh 'mvn dependency:purge-local-repository'
+                sh 'mvn install'
                 sh 'mvn clean package'
                 echo 'Build Successfully'
             }
