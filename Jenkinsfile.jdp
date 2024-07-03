@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        MAVEN_OPTS = '--add-opens java.base/java.util=ALL-UNNAMED'
+    }
     stages {
         stage('Pull') {
             steps {
@@ -9,7 +12,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'mvn clean install -DargLine="--add-opens java.base/java.util=ALL-UNNAMED"'
+                sh 'mvn clean package'
                 echo 'Build Successfully'
             }
         }
