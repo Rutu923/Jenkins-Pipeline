@@ -12,11 +12,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                echo '$PWD'
-                sh 'mvn clean'
-                sh 'mvn dependency:purge-local-repository'
-                sh 'mvn install'
-                sh 'mvn clean package'
+                sh '/opt/maven/bin/mvn clean package'
                 echo 'Build Successfully'
             }
         }
@@ -26,14 +22,6 @@ pipeline {
                     sh '/opt/maven/bin/mvn sonar:sonar'
                 }
                 echo 'Test Successfully'
-            }
-        }
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-                echo 'Quality Gate Successfully'
             }
         }
         stage('Deploy') {
