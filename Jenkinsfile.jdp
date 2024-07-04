@@ -17,13 +17,11 @@ pipeline {
                 echo 'Build Successfully'
             }
         }
-        stage('Test') {
+         stage('Test') {
             steps {
-                       sh ''' /home/ec2-user/apache-maven-3.9.7/bin/mvn sonar:sonar \\
-                      -Dsonar.projectKey=studentapps \\
-                      -Dsonar.host.url=http://18.117.228.9:9000 \\
-                      -Dsonar.login=72ef68a3bb5e5aef892d2836f1413cb5e900728d'''
-                    
+                withSonarQubeEnv(installationName: 'sonar', credentialsId: 'sonar') {
+                    sh '/opt/maven/bin/mvn sonar:sonar'
+                }
                 echo 'Test Successfully'
             }
         }
