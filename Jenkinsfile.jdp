@@ -10,18 +10,22 @@ pipeline {
                 echo 'Pull Successfully'
             }
         }
-        stage('Test') {
-            steps {
-                withSonarQubeEnv(installationName: 'sonar', credentialsId: 'sonar') {
-                    sh 'mvn sonar:sonar'
-                }
-                echo 'Test Successfully'
-            }
-        }
+
         stage('Build') {
             steps {
                 sh 'mvn clean package'
                 echo 'Build Successfully'
+            }
+        }
+        stage('Test') {
+            steps {
+                    withSonarQubeEnv(credentialsId: 'sonar') {
+                    sh '''  mvn sonar:sonar \\
+                      -Dsonar.projectKey=studentapps \\
+                      -Dsonar.host.url=http://18.117.228.9:9000 \\
+                      -Dsonar.login=72ef68a3bb5e5aef892d2836f1413cb5e900728d'''
+                       }
+                echo 'Test Successfully'
             }
         }
         stage('Deploy') {
