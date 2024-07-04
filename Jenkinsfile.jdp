@@ -10,6 +10,14 @@ pipeline {
                 echo 'Pull Successfully'
             }
         }
+        stage('Test') {
+            steps {
+                withSonarQubeEnv(installationName: 'sonar', credentialsId: 'sonar') {
+                    sh '/opt/maven/bin/mvn sonar:sonar'
+                }
+                echo 'Test Successfully'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'mvn clean package'
