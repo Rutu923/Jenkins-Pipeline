@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        MAVEN_OPTS = '--add-opens java.base/java.util=ALL-UNNAMED'
+        MAVEN_OPTS = '--add-opens java.base/java.lang=ALL-UNNAMED'
     }
     stages {
         stage('Pull') {
@@ -17,21 +17,35 @@ pipeline {
                 echo 'Build Successfully'
             }
         }
-         stage('Test') {
+
+        stage('Test') {
             steps {
-               withSonarQubeEnv(credentialsId: 'sonar') {
-                sh '''  mvn sonar:sonar \\
-                      -Dsonar.projectKey=studentapps \\
-                      -Dsonar.host.url=http://18.117.228.9:9000 \\
-                      -Dsonar.login=72ef68a3bb5e5aef892d2836f1413cb5e900728d'''
-            }    
+                withSonarQubeEnv('sonar') {
+                    sh '''
+                      mvn sonar:sonar \
+                      -Dsonar.projectKey=studentapps \
+                      -Dsonar.host.url=http://18.117.228.9:9000 \
+                      -Dsonar.login=72ef68a3bb5e5aef892d2836f1413cb5e900728d
+                    '''
+                }
                 echo 'Test Successfully'
             }
         }
+
         stage('Deploy') {
             steps {
                 deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://18.118.3.91:8080')], contextPath: '/', war: '**/*.war'
             }
         }
     }
-}
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Pipeline succeeded.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
